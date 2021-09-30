@@ -9,8 +9,26 @@ namespace VA {
 static const uint8_t NODE_HIDE = 0x1;
 
 Scene::Scene(const Settings & oNewSettings) :
-        pSceneTree(SE::CreateResource<SE::TSceneTree>(oNewSettings.sScenePath)),
+        pSceneTree(),
         oSettings(oNewSettings) {
+
+        if (!oSettings.sMeshPath.empty()) {
+                pSceneTree = SE::CreateResource<SE::TSceneTree>("scene", true);
+                auto pMesh = SE::CreateResource<SE::TMesh>(oNewSettings.sMeshPath);
+                auto pMaterial  = SE::CreateResource<SE::Material>(SE::GetSystem<SE::Config>().sResourceDir + "material/wireframe.semt");
+                //auto pMaterial  = SE::CreateResource<SE::Material>(SE::GetSystem<SE::Config>().sResourceDir + "material/default_tex.semt");
+
+                auto pModelNode = pSceneTree->Create("model");
+
+                auto res = pModelNode->CreateComponent<SE::StaticModel>(pMesh, pMaterial);
+                if (res != SE::uSUCCESS) {
+                        throw(std::runtime_error("failed to create StaticModel"));
+                }
+        }
+        else {
+                pSceneTree = SE::CreateResource<SE::TSceneTree>(oNewSettings.sScenePath);
+        }
+        se_assert(pSceneTree);
 
         pCameraNode = pSceneTree->Create("MainCamera");
         auto res = pCameraNode->CreateComponent<SE::Camera>(oSettings.oCamSettings);
@@ -29,7 +47,7 @@ Scene::Scene(const Settings & oNewSettings) :
         pCamera->SetPos(8, 4, 8);
         pCamera->LookAt(0.1, 0.1, 0.1);
 
-        SE::TEngine::Instance().Get<SE::TRenderer>().SetCamera(pCamera);
+        SE::GetSystem<SE::TRenderer>().SetCamera(pCamera);
 
         if (oSettings.enable_all) {
                 pSceneTree->EnableAll();

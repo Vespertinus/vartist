@@ -11,6 +11,7 @@ class Scene : public OIS::MouseListener {
         public:
         struct Settings {
                 const std::string & sScenePath;
+                const std::string & sMeshPath;
                 bool  vdebug;
                 bool  enable_all;
                 SE::Camera::Settings oCamSettings;

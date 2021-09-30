@@ -24,6 +24,7 @@ int main(int argc, char **argv) {
         SE::SysSettings_t oSettings;
         SE::Camera::Settings oCamSettings;
         string            sScenePath;
+        string            sMeshPath;
         bool              vdebug;
         bool              enable_all;
 
@@ -38,6 +39,7 @@ int main(int argc, char **argv) {
                         ("level",        bpo::value<string>()->default_value("info"),           "log level (debug|info|warn|error)")
                         ("log",          bpo::value<string>()->default_value("stdout"),         "log outout (stdout|stderr|<filename>)")
                         ("scene",        bpo::value<string>(),                                  "SceneTree file for visualisation (<filename.sesc>)")
+                        ("mesh",         bpo::value<string>(),                                  "Mesh file for visualisation (<filename.sesm>)")
                         ("ortho",        bpo::value<bool>()->default_value(false),              "orthogonal projection")
                         ("resource",     bpo::value<string>()->default_value("resource/"),      "resource dir (<dir path>)")
                         ("vdebug",       bpo::value<bool>()->default_value(false),              "visual debug helpers")
@@ -48,9 +50,9 @@ int main(int argc, char **argv) {
                 bpo::store(bpo::parse_command_line(argc, argv, desc), vm);
                 bpo::notify(vm);
 
-                if (vm.count("help") || vm.size() == 0 || !vm.count("scene") ) {
+                if (vm.count("help") || vm.size() == 0 || !(vm.count("scene") || vm.count("mesh")) ) {
                         std::cout << desc << std::endl;
-                        std::cout << "scene file must be set" << std::endl;
+                        std::cout << "scene or mesh file must be set" << std::endl;
                         return 1;
                 }
 
@@ -87,6 +89,9 @@ int main(int argc, char **argv) {
                 }
                 if (vm.count("scene") ) {
                         sScenePath  = vm["scene"].as<string>();
+                }
+                if (vm.count("mesh") ) {
+                        sMeshPath  = vm["mesh"].as<string>();
                 }
                 vdebug     = vm["vdebug"].as<bool>();
                 enable_all = vm["enable_all"].as<bool>();
@@ -127,7 +132,16 @@ int main(int argc, char **argv) {
 
 
         try {
-                SE::Application<VA::Scene> App(oSettings, VA::Scene::Settings{sScenePath, vdebug, enable_all, oCamSettings });
+                SE::Application<VA::Scene> App(
+                                oSettings,
+                                VA::Scene::Settings {
+                                        sScenePath,
+                                        sMeshPath,
+                                        vdebug,
+                                        enable_all,
+                                        oCamSettings
+                                }
+                                );
         }
         catch (std::exception & ex) {
                 log_e("exception catched = {}", ex.what());
