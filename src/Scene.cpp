@@ -38,9 +38,9 @@ Scene::Scene(const Settings & oNewSettings) :
         pCamera = pCameraNode->GetComponent<SE::Camera>();
         se_assert(pCamera);
 
-        res = pCameraNode->CreateComponent<SE::BasicController>();
+        res = pCameraNode->CreateComponent<EditorController>();
         if (res != SE::uSUCCESS) {
-                throw("failed to create BasicController component");
+                throw("failed to create EditorController component");
         }
 
         //init cam
@@ -290,7 +290,7 @@ bool Scene::mousePressed( const OIS::MouseEvent &ev [[maybe_unused]], OIS::Mouse
 bool Scene::mouseReleased( const OIS::MouseEvent &ev, OIS::MouseButtonID id) {
 
         switch (id) {
-                case OIS::MB_Right:
+                case OIS::MB_Button3:
                         toggle_controller = true;
                         break;
                 default:
@@ -298,6 +298,7 @@ bool Scene::mouseReleased( const OIS::MouseEvent &ev, OIS::MouseButtonID id) {
         }
 
         return true;
+
 }
 
 

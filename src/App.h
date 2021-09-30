@@ -3,11 +3,16 @@
 #ifndef FORWARD_CUSTOM_COMPONENTS_GUARD
 #define FORWARD_CUSTOM_COMPONENTS_GUARD
 
+namespace VA {
+
+class EditorController;
+
+}
+
 namespace SE {
 
-class BasicController;
 
-using TCustomComponents = MP::TypelistWrapper<BasicController>;
+using TCustomComponents = MP::TypelistWrapper<VA::EditorController>;
 
 }
 
@@ -18,7 +23,7 @@ using TCustomComponents = MP::TypelistWrapper<BasicController>;
 #ifndef INC_CUSTOM_COMPONENTS_HEADER_GUARD
 #define INC_CUSTOM_COMPONENTS_HEADER_GUARD
 
-#include <BasicController.h>
+#include <EditorController.h>
 
 #endif
 #endif
@@ -27,7 +32,7 @@ using TCustomComponents = MP::TypelistWrapper<BasicController>;
 #ifndef INC_CUSTOM_COMPONENTS_IMPL_GUARD
 #define INC_CUSTOM_COMPONENTS_IMPL_GUARD
 
-#include <BasicController.tcc>
+#include <EditorController.tcc>
 
 #endif
 #endif
